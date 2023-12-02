@@ -158,7 +158,7 @@
  $(document).on('click', '.update-button', function(e){
 
     e.preventDefault();
-    var theproductid=$(this).data('index');
+    let theproductid=$(this).data('index');
     $.ajax({
         type:'POST',
         url: '{% url "cart-update" %}',

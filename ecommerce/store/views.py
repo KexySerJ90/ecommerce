@@ -27,3 +27,6 @@ def product_info(request, product_slug):
     product = get_object_or_404(Product, slug=product_slug)
     context = {"product": product}
     return render(request, 'store/product-info.html', context)
+
+def handle_not_found(request, exception):
+    return render(request, 'store/404.html')
