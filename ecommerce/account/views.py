@@ -1,4 +1,4 @@
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -9,6 +9,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .forms import CreateUserForm, LoginForm, UpdateUserForm
+from payment.forms import ShippingForm
+from payment.models import ShippingAdress
 from .token import user_tokenizer_generate
 
 
@@ -78,7 +80,15 @@ def my_login(request):
 
 
 def user_logout(request):
-    auth.logout(request)
+    try:
+        for key in list(request.session.keys()):
+            if key == "session_key":
+                continue
+            else:
+                del request.session[key]
+    except KeyError:
+        pass
+    messages.success(request, "Logout success")
     return redirect('store')
 
 @login_required(login_url='my-login')
@@ -92,6 +102,7 @@ def profile_management(request):
         user_form=UpdateUserForm(request.POST, instance=request.user)
         if user_form.is_valid():
             user_form.save()
+            messages.info(request, "Account updated")
             return redirect('dashboard')
 
     context={'user_form':user_form}
@@ -104,5 +115,24 @@ def delete_account(request):
     user=User.objects.get(id=request.user.id)
     if request.method=="POST":
         user.delete()
+        messages.error(request, "Account deleted")
         return redirect('store')
     return render(request, 'account/delete-account.html')
+
+@login_required(login_url='my-login')
+def manage_shipping(request):
+    try:
+        shipping=ShippingAdress.objects.get(user=request.user.id)
+    except ShippingAdress.DoesNotExist:
+        shipping = None
+
+    form=ShippingForm(instance=shipping)
+    if request.method=="POST":
+        form=ShippingForm(request.POST, instance=shipping)
+        if form.is_valid():
+            shipping_user=form.save(commit=False)
+            shipping_user.user = request.user
+            shipping_user.save()
+            return redirect('dashboard')
+    context={'form':form}
+    return render(request, 'account/manage-shipping.html', context=context)
