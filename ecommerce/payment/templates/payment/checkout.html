@@ -42,7 +42,7 @@
 
                     <div class="form-field">
                     
-                        <input class="form-control validate" id="name" type="text" placeholder="Full name*" autocomplete="off" value="" required>
+                        <input class="form-control validate" id="name" type="text" placeholder="Full name*" autocomplete="off" value="{{shipping.full_name}}" required>
 
                     </div>
 
@@ -52,7 +52,7 @@
 
                     <div class="form-field">
 
-                        <input class="form-control validate" id="email" type="email" placeholder="Email address*" autocomplete="off" value="" required>
+                        <input class="form-control validate" id="email" type="email" placeholder="Email address*" autocomplete="off" value="{{shipping.email}}" required>
 
                     </div>
 
@@ -62,7 +62,7 @@
                     
                     <div class="form-field">
 
-                        <input class="form-control validate" id="address1" type="text" placeholder="Address 1*" autocomplete="off" value="" required>
+                        <input class="form-control validate" id="address1" type="text" placeholder="Address 1*" autocomplete="off" value="{{shipping.address1}}" required>
 
                     </div>
 
@@ -72,7 +72,7 @@
 
                     <div class="form-field">
 
-                        <input class="form-control validate" id="address2" type="text" placeholder="Address 2*" autocomplete="off" value="" required>
+                        <input class="form-control validate" id="address2" type="text" placeholder="Address 2*" autocomplete="off" value="{{shipping.address2}}" required>
 
                     </div>
 
@@ -82,7 +82,7 @@
 
                     <div class="form-field">
 
-                        <input class="form-control validate" id="city" type="text" placeholder="City*" autocomplete="off" value="" required>
+                        <input class="form-control validate" id="city" type="text" placeholder="City*" autocomplete="off" value="{{shipping.city}}" required>
 
                     </div>
 
@@ -92,7 +92,7 @@
 
                     <div class="form-field">
 
-                        <input class="form-control" id="state" type="text" placeholder="State (Optional)" autocomplete="off" value="">
+                        <input class="form-control" id="state" type="text" placeholder="State (Optional)" autocomplete="off" value="{{shipping.state}}">
 
                     </div>
 
@@ -102,7 +102,7 @@
 
                     <div class="form-field">
 
-                        <input class="form-control" id="zipcode" type="text" placeholder="Zip code (Optional)" autocomplete="off" value="">
+                        <input class="form-control" id="zipcode" type="text" placeholder="Zip code (Optional)" autocomplete="off" value="{{shipping.zipcode}}">
 
                     </div>
             
@@ -139,9 +139,39 @@
 
     <script>
 
+$(document).on('submit', function(e){
 
-    
+    // Предотвращаем стандартное действие браузера по умолчанию при нажатии на кнопку
+    e.preventDefault();
 
+    // Отправляем AJAX запрос на сервер
+    $.ajax({
+        type:'POST', // Указываем метод запроса
+        url: '{% url "complete-order" %}', // Указываем URL адрес, куда отправлять запрос
+
+        // Передаем данные для обновления корзины
+        data:{
+
+            name: $('#name').val(),
+            email: $('#email').val(),
+            address1: $('#address1').val(),
+            address2: $('#address2').val(),
+            city: $('#city').val(),
+            state: $('#state').val(),
+            zipcode: $('#zipcode').val(),
+            csrfmiddlewaretoken: "{{csrf_token}}", // Передаем токен CSRF для защиты от CSRF атак
+            action: 'post' // Указываем действие
+        },
+
+        // Обрабатываем успешный ответ от сервера
+        success: function(json){
+        },
+
+        // Обрабатываем ошибку при выполнении запроса
+        error: function(xhr,errmsg,err){
+        }
+    });
+})
 
    </script>
 
