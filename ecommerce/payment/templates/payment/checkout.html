@@ -165,10 +165,12 @@ $(document).on('submit', function(e){
 
         // Обрабатываем успешный ответ от сервера
         success: function(json){
+        window.location.replace("{% url 'payment-success' %}");
         },
 
         // Обрабатываем ошибку при выполнении запроса
         error: function(xhr,errmsg,err){
+        window.location.replace("{% url 'payment-failed' %}");
         }
     });
 })
