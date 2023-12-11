@@ -4,16 +4,15 @@
 
 {% load static %}
 
-
 {% block content %}
 
 <style>
-    
-    body 
+
+    body
     {
-        
+
         background-color: gray;
-    
+
     }
 
 
@@ -26,98 +25,31 @@
 
         <div class="container bg-white shadow-md p-5" style="width:500px; border-radius:20px;">
 
-            <form id="form">
+            <form id="form" action="{% url 'complete-order' %}" method="post">
 
                 <div>
 
                     <h3> <i class="fa fa-chevron-circle-right" aria-hidden="true"></i> &nbsp; Complete your order </h3>
 
                     <p> Please enter in the relevant information below. </p>
- 
+
 
 
                     <hr>
 
-                    <br>
 
                     <div class="form-field">
-                    
-                        <input class="form-control validate" id="name" type="text" placeholder="Full name*" autocomplete="off" value="{{shipping.full_name}}" required>
+                        {% csrf_token %}
 
+                        {% for f in form %}
+                        <div class="form-error">{{ form.non_field_errors }}</div>
+                        <p><label class="form-label" for="{{ f.id_for_label }}" >{{f.label}}</label>{{ f }}</p>
+                        <div class="form-error">{{ f.errors }}</div>
+                        {% endfor %}
                     </div>
-
-
-                    <br>
-
-
-                    <div class="form-field">
-
-                        <input class="form-control validate" id="email" type="email" placeholder="Email address*" autocomplete="off" value="{{shipping.email}}" required>
-
-                    </div>
-
-                    
-                    <br>
-
-                    
-                    <div class="form-field">
-
-                        <input class="form-control validate" id="address1" type="text" placeholder="Address 1*" autocomplete="off" value="{{shipping.address1}}" required>
-
-                    </div>
-
-
-                    <br>
-
-
-                    <div class="form-field">
-
-                        <input class="form-control validate" id="address2" type="text" placeholder="Address 2*" autocomplete="off" value="{{shipping.address2}}" required>
-
-                    </div>
-
-
-                    <br>
-
-
-                    <div class="form-field">
-
-                        <input class="form-control validate" id="city" type="text" placeholder="City*" autocomplete="off" value="{{shipping.city}}" required>
-
-                    </div>
-
-
-                    <br>
-
-
-                    <div class="form-field">
-
-                        <input class="form-control" id="state" type="text" placeholder="State (Optional)" autocomplete="off" value="{{shipping.state}}">
-
-                    </div>
-
-
-                    <br>
-
-
-                    <div class="form-field">
-
-                        <input class="form-control" id="zipcode" type="text" placeholder="Zip code (Optional)" autocomplete="off" value="{{shipping.zipcode}}">
-
-                    </div>
-            
-                </div>
 
                 <br>
-
-
-
-               <button id="complete-order" type="submit" class="btn btn-primary navbar-btn text-white"> &nbsp; Complete order </button>
-               
-
-                <br>
-
-
+               <button id="complete-order-stripe" type="submit" class="btn btn-primary navbar-btn text-white" name="stripe-payment" value="stripe-payment"> &nbsp; Pay with Stripe </button>
 
 
             </form>
@@ -125,60 +57,51 @@
 
         </div>
 
-        
+
 
         <br>
 
 
     </body>
+    <!--<script>-->
+    <!--$(document).on('submit', function(e){-->
 
+    <!--    // Предотвращаем стандартное действие браузера по умолчанию при нажатии на кнопку-->
+    <!--    e.preventDefault();-->
 
-    <!-- Ajax integration -->
+    <!--    // Отправляем AJAX запрос на сервер-->
+    <!--    $.ajax({-->
+    <!--        type:'POST', // Указываем метод запроса-->
+    <!--        url: '{% url "complete-order" %}', // Указываем URL адрес, куда отправлять запрос-->
 
-    
+    <!--        // Передаем данные для обновления корзины-->
+    <!--        data:{-->
 
-    <script>
+    <!--            name: $('#name').val(),-->
+    <!--            email: $('#email').val(),-->
+    <!--            address1: $('#address1').val(),-->
+    <!--            address2: $('#address2').val(),-->
+    <!--            city: $('#city').val(),-->
+    <!--            state: $('#state').val(),-->
+    <!--            zipcode: $('#zipcode').val(),-->
+    <!--            csrfmiddlewaretoken: "{{csrf_token}}", // Передаем токен CSRF для защиты от CSRF атак-->
+    <!--            action: 'post' // Указываем действие-->
+    <!--        },-->
 
-$(document).on('submit', function(e){
+    <!--        // Обрабатываем успешный ответ от сервера-->
+    <!--        success: function(json){-->
+    <!--        window.location.replace("{% url 'payment-success' %}");-->
+    <!--        },-->
 
-    // Предотвращаем стандартное действие браузера по умолчанию при нажатии на кнопку
-    e.preventDefault();
-
-    // Отправляем AJAX запрос на сервер
-    $.ajax({
-        type:'POST', // Указываем метод запроса
-        url: '{% url "complete-order" %}', // Указываем URL адрес, куда отправлять запрос
-
-        // Передаем данные для обновления корзины
-        data:{
-
-            name: $('#name').val(),
-            email: $('#email').val(),
-            address1: $('#address1').val(),
-            address2: $('#address2').val(),
-            city: $('#city').val(),
-            state: $('#state').val(),
-            zipcode: $('#zipcode').val(),
-            csrfmiddlewaretoken: "{{csrf_token}}", // Передаем токен CSRF для защиты от CSRF атак
-            action: 'post' // Указываем действие
-        },
-
-        // Обрабатываем успешный ответ от сервера
-        success: function(json){
-        window.location.replace("{% url 'payment-success' %}");
-        },
-
-        // Обрабатываем ошибку при выполнении запроса
-        error: function(xhr,errmsg,err){
-        window.location.replace("{% url 'payment-failed' %}");
-        }
-    });
-})
-
-   </script>
+    <!--        // Обрабатываем ошибку при выполнении запроса-->
+    <!--        error: function(xhr,errmsg,err){-->
+    <!--        window.location.replace("{% url 'payment-failed' %}");-->
+    <!--        }-->
+    <!--    });-->
+    <!--})-->
 
 
 
-
+    <!--   </script>-->
 
 {% endblock %}
