@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms import TextInput, PasswordInput
+from django_recaptcha.fields import ReCaptchaField
 
 
 class CreateUserForm(UserCreationForm):
@@ -21,6 +22,8 @@ class CreateUserForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('This email is invalid')
         return email
+
+    captcha=ReCaptchaField()
 
 
 class LoginForm(AuthenticationForm):

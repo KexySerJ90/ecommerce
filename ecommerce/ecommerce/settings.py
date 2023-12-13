@@ -29,7 +29,6 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = [ ]
 
 
@@ -49,11 +48,15 @@ INSTALLED_APPS = [
     "mathfilters",
     "crispy_forms",
     "crispy_bootstrap4",
+    "django_recaptcha"
 
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+RECAPTCHA_PUBLIC_KEY = '6Lc8hjApAAAAACA4NIHeQGMy4QIYv-FACzN1CrDQ'
+RECAPTCHA_PRIVATE_KEY = '6Lc8hjApAAAAADQH0TiDVpM5JzJYUGVoVWwyD55Y'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
