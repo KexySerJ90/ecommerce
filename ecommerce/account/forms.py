@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms import TextInput, PasswordInput
@@ -17,10 +18,9 @@ class CreateUserForm(UserCreationForm):
         self.fields['email'].required=True
 
     def clean_email(self):
-
-        email=self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('This email is invalid')
+        email = self.cleaned_data.get('email')
+        if get_user_model().objects.filter(email=email).exists():
+            raise forms.ValidationError("Email уже существует")
         return email
 
     captcha=ReCaptchaField()

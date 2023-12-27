@@ -145,3 +145,7 @@ def track_orders(request):
         return render(request, 'account/track-orders.html', context=context)
     except:
         return render(request, 'account/track-orders.html')
+
+
+def account_locked(request):
+    return render(request, 'account/account-locked.html')

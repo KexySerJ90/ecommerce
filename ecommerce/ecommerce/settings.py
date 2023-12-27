@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     "mathfilters",
     "crispy_forms",
     "crispy_bootstrap4",
-    "django_recaptcha"
+    "django_recaptcha",
+    "axes",
 
 ]
 
@@ -63,10 +64,20 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    "axes.middleware.AxesMiddleware",
+    "django_auto_logout.middleware.auto_logout",
 ]
+
+AUTHENTICATION_BACKEND=[
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend'
+]
+
 
 ROOT_URLCONF = "ecommerce.urls"
 
@@ -82,7 +93,9 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "store.views.categories",
-                "cart.context_processors.cart"
+                "cart.context_processors.cart",
+                "django_auto_logout.context_processors.auto_logout_client", #Auto logout
+
             ],
         },
     },
@@ -156,6 +169,25 @@ EMAIL_USE_TLS=True
 EMAIL_HOST_USER='exserj9011@gmail.com'
 EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'account.authentication.EmailAuthBackend',
+]
+
+
 STRIPE_PUBLISHABLE_KEY=env('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY=env('STRIPE_SECRET_KEY')
 STRIPE_API_VERSION='2023-10-16'
+
+AUTO_LOGOUT = {
+    'IDLE_TIME': 600000,
+    #'MESSAGE': 'The session has expired. Please login again to continue.',
+    'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+}
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'# без этого не работало
+
+
+AXES_FAILURE_LIMIT: 3 #attempt
+AXES_COOLOFF_TIME: 1 #wait 1 hour
+AXES_RESET_ON_SUCCESS=True
+AXES_LOCKOUT_TEMPLATE='account/account-locked.html'
