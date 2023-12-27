@@ -28,6 +28,7 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('account/', include('account.urls')),
     path('payment/', include('payment.urls')),
+    path('social-auth/', include('social_django.urls', namespace='social')),
 ]
 handler404=handle_not_found
 handler403=handle_not_found

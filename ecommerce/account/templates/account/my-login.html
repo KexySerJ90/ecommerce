@@ -28,6 +28,8 @@
             <button type="submit" class="btn btn-secondary btn-lg w-100 btn-block p-2"> <i class="fa fa-key" aria-hidden="true"></i>&nbsp;&nbsp; Login</button>
             <br> <br>
             {{form.non_field_errors}}
+            <p><a href="{% url 'social:begin' 'vk-oauth2' %}"><img src="/media/social-auth/vk.png"></a></p>
+
             <div class="text-center">
                 <a href="{% url 'register' %}">Don`<t></t> have an account? </a>
                 <br><br>
