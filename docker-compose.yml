@@ -1,7 +1,8 @@
 services:
   web-app:
-    build:
-      context: .
+    image: kexserj90/ecommerce-dev
+#    build:
+#      context: .
     ports:
       - "8000:8000"
     restart: always
