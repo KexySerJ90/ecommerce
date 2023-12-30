@@ -29,8 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'sitewomen.ru', '192.168.3.45']
-ALLOWED_HOSTS = [env("ALLOWED_HOST"), ]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'sitewomen.ru', '45.87.246.101']
 INTERNAL_IPS = ["127.0.0.1"]
 
 
@@ -226,7 +225,3 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/account/dashboard'
-
-CSRF_TRUSTED_ORIGINS = []
-if scrf_subdomain := env("SCRF_SUBDOMAIN"):
-    CSRF_TRUSTED_ORIGINS += [f'http://{scrf_subdomain}', f'https://{scrf_subdomain}']
