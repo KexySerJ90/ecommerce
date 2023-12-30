@@ -1,0 +1,60 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    restart: always
+    depends_on:
+      - yt_postgres
+    volumes:
+      - ./ecommerce:/ecommerce
+    env_file:
+      - .env
+    environment:
+      - VIRTUAL_HOST=${ALLOWED_HOST}
+      - LETSENCRYPT_HOST=${ALLOWED_HOST}
+    command: >
+      sh -c "./manage.py collectstatic --noinput && ./manage.py migrate && gunicorn -b 0.0.0.0:8000 ecommerce.wsgi:application"
+  yt_postgres:
+    image: postgres:16
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+  nginx:
+    image: jwilder/nginx-proxy
+    restart: always
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+    depends_on:
+      - web-app
+    ports:
+      - "80:80"
+      - "${NGINX_EXTERNAL_SSL_PORT}:443"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '8888:8080'
+
+  acme_companion:
+    image: nginxproxy/acme-companion
+    volumes_from:
+      - nginx
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/etc/acme.sh
+
+
+volumes:
+  postgres_data:
+  certs:
+  vhost:
+  html:
+  acme:

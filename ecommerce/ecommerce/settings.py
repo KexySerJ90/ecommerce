@@ -29,7 +29,8 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'sitewomen.ru']
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'sitewomen.ru', '192.168.3.45']
+ALLOWED_HOSTS = [env("ALLOWED_HOST"), ]
 INTERNAL_IPS = ["127.0.0.1"]
 
 
@@ -119,11 +120,12 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecommerce_db',
+        'NAME': env.str('POSTGRES_DB','ecommerce_db'),
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': 5433,
+        'HOST': env.str('POSTGRES_HOST','localhost'),
+        # 'HOST': 'localhost',
+        'PORT': env.int('POSTGRES_POST',5433),
     }
     }
 
@@ -161,8 +163,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "/static/"
-STATICFILES_DIRS=[BASE_DIR / 'static']
+STATIC_URL = "static/"
+#STATICFILES_DIRS=[BASE_DIR / 'static']
+STATIC_ROOT=BASE_DIR /'static'
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR / 'static/media'
@@ -223,3 +226,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/account/dashboard'
+
+CSRF_TRUSTED_ORIGINS = []
+if scrf_subdomain := env("SCRF_SUBDOMAIN"):
+    CSRF_TRUSTED_ORIGINS += [f'http://{scrf_subdomain}', f'https://{scrf_subdomain}']
