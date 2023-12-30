@@ -7,8 +7,8 @@ services:
     restart: always
     depends_on:
       - yt_postgres
-    volumes:
-      - ./ecommerce:/ecommerce
+#    volumes:
+#      - ./ecommerce:/ecommerce
     env_file:
       - .env
     command: >
@@ -28,11 +28,11 @@ services:
     ports:
       - "80:80"
       - "403:403"
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - '8888:8080'
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - '8888:8080'
 
 volumes:
   postgres_data:
