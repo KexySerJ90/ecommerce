@@ -1,39 +1,38 @@
 services:
   web-app:
-    image: kexserj90/ecommerce-dev
-#    build:
-#      context: .
+    build:
+      context: .
     ports:
       - "8000:8000"
     restart: always
     depends_on:
       - yt_postgres
-#    volumes:
-#      - ./ecommerce:/ecommerce
+    volumes:
+      - ./ecommerce:/ecommerce
     env_file:
       - .env
     command: >
       sh -c "./manage.py collectstatic --noinput && ./manage.py migrate && gunicorn -b 0.0.0.0:8000 ecommerce.wsgi:application"
   yt_postgres:
-    image: postgres:16
+    image: postgres:16-alpine
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
   nginx:
-    image: nginx
+    image: nginx:1.25.3-alpine
     restart: always
     depends_on:
       - web-app
     ports:
       - "80:80"
       - "403:403"
-#  adminer:
-#    image: adminer
-#    restart: always
-#    ports:
-#      - '8888:8080'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '8888:8080'
 
 volumes:
   postgres_data:
