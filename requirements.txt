@@ -1,5 +1,6 @@
 asgiref==3.7.2
 Babel==2.14.0
+celery[redis]==5.3.6
 certifi==2023.11.17
 cffi==1.16.0
 charset-normalizer==3.3.2

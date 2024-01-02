@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "account",
     "payment",
     "rest_framework",
-    "debug_toolbar",
+    #"debug_toolbar",
     "mathfilters",
     "crispy_forms",
     "crispy_bootstrap4",
@@ -65,7 +65,7 @@ RECAPTCHA_PUBLIC_KEY = '6Lc8hjApAAAAACA4NIHeQGMy4QIYv-FACzN1CrDQ'
 RECAPTCHA_PRIVATE_KEY = '6Lc8hjApAAAAADQH0TiDVpM5JzJYUGVoVWwyD55Y'
 
 MIDDLEWARE = [
-   "debug_toolbar.middleware.DebugToolbarMiddleware",
+   #"debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -126,10 +126,10 @@ DATABASES = {
         'NAME': env.str('POSTGRES_DB','ecommerce_db'),
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
-        #'HOST': env.str('POSTGRES_HOST','localhost'),
-        'HOST': 'localhost',
-        'PORT': 5433,
-        #'PORT': env.int('POSTGRES_POST',5433),
+        'HOST': env.str('POSTGRES_HOST','localhost'),
+        #'HOST': 'localhost',
+        #'PORT': 5433,
+        'PORT': env.int('POSTGRES_POST',5433),
     }
     }
 
@@ -230,6 +230,13 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/account/dashboard'
+
+CELERY_BROKER_URL = "redis://redis:6379/0"
+
+
+
+
+
 
 # CSRF_TRUSTED_ORIGINS = []
 # if scrf_subdomain := env("SCRF_SUBDOMAIN"):

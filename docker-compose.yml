@@ -34,6 +34,22 @@ services:
     restart: always
     ports:
       - '8888:8080'
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - ./ecommerce:/ecommerce
+    links:
+      - redis
+    depends_on:
+      - redis
 
 volumes:
   postgres_data:

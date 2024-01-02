@@ -29,7 +29,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('store.urls')),
     #path('api/v1/productlist/',Product_view.as_view()),
-    path("__debug__/", include("debug_toolbar.urls")),
+    #path("__debug__/", include("debug_toolbar.urls")),
     path('cart/', include('cart.urls')),
     path('account/', include('account.urls')),
     path('payment/', include('payment.urls')),
