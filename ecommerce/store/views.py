@@ -1,6 +1,10 @@
 from django.shortcuts import render, get_object_or_404
+from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Category, Product
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from .serializers import ProductSerializer
 
 
 def store(request):
@@ -30,3 +34,14 @@ def product_info(request, product_slug):
 
 def handle_not_found(request, exception):
     return render(request, 'store/404.html')
+
+
+class ProductAPIPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
+class Product_view(ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    pagination_class = ProductAPIPagination

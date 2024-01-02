@@ -21,16 +21,26 @@ from django.urls import path, include
 from django.views import defaults
 from django.views.static import serve as mediaserve
 from django.urls import re_path
-from store.views import handle_not_found
+from rest_framework import routers
+
+from store.views import handle_not_found, Product_view
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('store.urls')),
+    #path('api/v1/productlist/',Product_view.as_view()),
+    path("__debug__/", include("debug_toolbar.urls")),
     path('cart/', include('cart.urls')),
     path('account/', include('account.urls')),
     path('payment/', include('payment.urls')),
     path('social-auth/', include('social_django.urls', namespace='social')),
 ]
+
+router=routers.DefaultRouter()
+router.register(r'api/v1/productlist', Product_view)
+
+
+urlpatterns+=router.urls
 handler404=handle_not_found
 handler403=handle_not_found
 urlpatterns += [
